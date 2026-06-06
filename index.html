@@ -16,42 +16,46 @@
     font-family: 'Courier New', monospace;
   }
   #gc {
-    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     touch-action: none;
   }
   #cv {
     display: block;
     image-rendering: pixelated;
+    flex-shrink: 0;
   }
   #tc {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 130px;
     display: none;
-    pointer-events: none;
+    flex-shrink: 0;
+    width: 100%;
+    height: 110px;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    background: rgba(0,0,0,0.85);
   }
   .tb {
-    position: absolute;
-    width: 80px;
-    height: 80px;
-    border: 3px solid rgba(255,255,255,0.35);
+    width: 84px;
+    height: 84px;
+    border: 3px solid rgba(255,255,255,0.4);
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    color: rgba(255,255,255,0.55);
-    font-size: 30px;
-    pointer-events: auto;
+    color: rgba(255,255,255,0.7);
+    font-size: 28px;
     user-select: none;
     -webkit-user-select: none;
-    background: rgba(255,255,255,0.08);
-    bottom: 24px;
+    background: rgba(255,255,255,0.1);
+    cursor: pointer;
+    flex-shrink: 0;
   }
-  #tL { left: 16px; }
-  #tR { left: 110px; }
-  #tF { right: 16px; font-size: 26px; }
+  #tL { }
+  #tR { }
+  #tF { font-size: 18px; font-weight: bold; letter-spacing: 1px; }
 </style>
 </head>
 <body>
@@ -79,14 +83,16 @@ const W = 480, H = 640;
 let scale = 1;
 
 function resize() {
-  scale = Math.min(window.innerWidth / W, window.innerHeight / H);
+  const isMobile = 'ontouchstart' in window;
+  const ctrlH = isMobile ? 110 : 0;
+  scale = Math.min(window.innerWidth / W, (window.innerHeight - ctrlH) / H);
   canvas.width  = W;
   canvas.height = H;
   canvas.style.width  = (W * scale) + 'px';
   canvas.style.height = (H * scale) + 'px';
-  gc.style.width  = canvas.style.width;
-  gc.style.height = canvas.style.height;
-  tc.style.display = ('ontouchstart' in window) ? 'block' : 'none';
+  gc.style.width  = (W * scale) + 'px';
+  tc.style.display = isMobile ? 'flex' : 'none';
+  if (isMobile) tc.style.width = (W * scale) + 'px';
 }
 window.addEventListener('resize', resize);
 resize();
